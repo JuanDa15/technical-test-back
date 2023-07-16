@@ -11,7 +11,6 @@ const router = Router();
 
 router.get('/', validateJWT, getAgents)
 router.post('/', [
-  validateJWT,
   check('name', 'name is required').not().isEmpty(),
   check('lastName', 'lastName is required').not().isEmpty(),
   check('email', 'should be a valid email').isEmail(),
