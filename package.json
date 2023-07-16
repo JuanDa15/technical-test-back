@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "run:dev": "nodemon src/index.js"
+    "run:dev": "nodemon src/index.js",
+    "start": "node index.js"
   },
   "author": "Juan David Osorio Ortiz <jdoo1115@gmail.com>",
   "license": "ISC",
