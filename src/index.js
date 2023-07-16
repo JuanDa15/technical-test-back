@@ -51,8 +51,8 @@ app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/hotels', require('./routes/hotel.routes'))
 app.use('/api/rooms', require('./routes/room.routes'))
 app.use('/api/reservations', require('./routes/reservation.routes'))
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Runing in port', process.env.PORT || 3000)
+app.listen(process.env.PORT || 80, () => {
+  console.log('Runing in port', process.env.PORT)
 })
 
 // POPULATE: TRAE LA REFERENENCIA DE LAS TABLAS
