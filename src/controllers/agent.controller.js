@@ -47,13 +47,11 @@ const createAgent = async (req, res = response) => {
     const salt = genSaltSync();
     agent.password = hashSync( others.password, salt)
 
-    const updatedAgent = await agent.save();
+    await agent.save();
   
     res.status(200).json({
       ok: true,
-      data: {
-        ...updatedAgent
-      }
+      data: 'successfully created'
     })
 
 
