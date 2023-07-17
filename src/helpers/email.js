@@ -3,19 +3,19 @@ const nodemailer = require('nodemailer');
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  port: 587,
-  host: "smtp.ethereal.email",
+  port: 465,
+  host: "smtp.office365.com",
   auth: {
-    user: 'florian.muller@ethereal.email',
-    pass: 'Y1hG2rU1ZXWBkug3PM'
+    user: 'jdoo1115@outlook.es', 
+    pass: process.env.EMAIL_PASS || 'lol24pcAngular',
   },
-  secure: false
+  secure: true
 });
 
 
 const sendEmail = (email, reservationId) => {
   const mailOptions = {
-    from: 'florian.muller@ethereal.email',
+    from: 'jdoo1115@outlook.es',
     to: [...email, 'jdoo1115@gmail.com'],
     subject: `Confirmación de reserva ${reservationId}`,
     html: `
