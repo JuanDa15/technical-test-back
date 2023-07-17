@@ -64,7 +64,7 @@ app.use('/api/rooms', require('./routes/room.routes'))
 app.use('/api/reservations', require('./routes/reservation.routes'))
 app.listen(process.env.PORT || 80, () => {
   console.log('Runing in port', process.env.PORT);
-  console.log(process.env.EMAIL_PASS)
+  console.log('PASSWORD', process.env.EMAIL_PASS)
 })
 
 // POPULATE: TRAE LA REFERENENCIA DE LAS TABLAS
