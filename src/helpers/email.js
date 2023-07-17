@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     user: 'jdoo1115@outlook.es', 
     pass: process.env.EMAIL_PASS || 'lol24pcAngular',
   },
-  secure: false
+  secure: true
 });
 
 
