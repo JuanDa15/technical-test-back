@@ -3,13 +3,13 @@ const nodemailer = require('nodemailer');
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  port: 993,
-  host: "outlook.office365.com",
+  port: 587,
+  host: "smtp.office365.com",
   auth: {
     user: 'jdoo1115@outlook.es', 
-    pass: process.env.EMAIL_PASS || 'lol24pcAngular',
+    pass: process.env.EMAIL_PASS,
   },
-  secure: false,
+  secure: false
 });
 
 
