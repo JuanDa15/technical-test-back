@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getRooms, createRoom, updateRoom, deleteRoom } = require('../controllers/room.controller');
+const { getRooms, createRoom, updateRoom, deleteRoom, getRoom } = require('../controllers/room.controller');
 const validateJWT = require('../middlewares/validate-token.middleware');
 const { check } = require('express-validator');
 const validateFields = require('../middlewares/validate-fields.middleware');
@@ -16,7 +16,6 @@ router.post('/', [
   check('baseCost', 'baseCost is required').notEmpty(),
   check('taxes', 'taxes is required').notEmpty(),
   check('type', 'type is required').notEmpty(),
-  check('hotel', 'hotel is required').isMongoId(),
   validateFields
 ],createRoom)
 router.patch('/:id', [
@@ -25,5 +24,8 @@ router.patch('/:id', [
 router.delete('/:id', [
   validateJWT
 ], deleteRoom)
+router.get('/:id', [
+  validateJWT
+],getRoom)
 
 module.exports = router;

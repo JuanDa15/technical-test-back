@@ -1,5 +1,10 @@
 const { Schema, model } = require('mongoose')
 
+const EmergencyContactTypeSchema =  new Schema({
+  name: String,
+  phone: String,
+})
+
 const ReservationSchema = Schema({
   hotel: {
     type: Schema.Types.ObjectId,
@@ -20,7 +25,11 @@ const ReservationSchema = Schema({
   travelers: [{
     type: Schema.Types.ObjectId,
     ref: 'Traveler'
-  }]
+  }],
+  emergencyContact: {
+    type: EmergencyContactTypeSchema,
+    required: true
+  },
 })
 
 ReservationSchema.method('toJSON', function () {

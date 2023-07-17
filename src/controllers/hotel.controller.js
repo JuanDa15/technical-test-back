@@ -2,14 +2,70 @@ const { response } = require('express');
 const Hotel = require('../models/hotel.model');
 const Room = require('../models/room.model');
 
+const getHotel = async (req, res = response) => {
+  const { id } = req.params;
+  try {
+    const hotel = await Hotel.findById(id)
+                .populate('updatedBy', 'id name lastName email')
+                .populate('rooms', 'active reserved location type baseCost taxes')
+
+    if (!hotel) {
+      return res.status(404).json({
+        ok: false,
+        data: 'Hotel not found'
+      })
+    }
+
+    
+    return res.status(200).json({
+      ok: true,
+      data: hotel
+    })
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      data: 'Unexpected error. Contact the administrator'
+  });
+  }
+}
+
+const getHotelsPrivate = async (req, res = response) => {
+  const { from = 0 } = req.query;
+  try {
+    const [hotels = [], count] = await Promise.all([
+      Hotel.find({}, {deleted: 0, updatedBy: 0}).skip(Number(from))
+                  .limit(7),
+      Hotel.count()
+    ])
+    const toReturn = hotels.map(hotel => {
+      return {
+        ...hotel.toJSON(),
+        availableRooms: (hotel.rooms || []).filter(room => !room.reserved).length
+      }
+    })
+    console.log(toReturn);
+    return res.status(200).json({
+      ok: true,
+      data: {
+        data: toReturn,
+        count: count
+      }
+    })
+
+  } catch (error) {
+    res.status(500).json({
+        ok: false,
+        data: 'Unexpected error. Contact the administrator'
+    });
+  }
+}
+
 const getHotels = async (req, res = response) => {
   const { from = 0 } = req.query;
   try {
     const [hotels, count] = await Promise.all([
-      Hotel.find().where('deleted')
+      Hotel.find({}, {deleted: 0, updatedBy: 0, enabled: 0, email: 0}).where('deleted')
                     .equals(false)
-                    .populate('updatedBy', 'id name lastName email')
-                    .populate('rooms')
                     .skip(Number(from))
                     .limit(7),
       Hotel.count()
@@ -18,7 +74,12 @@ const getHotels = async (req, res = response) => {
     return res.status(200).json({
       ok: true,
       data: {
-        data: hotels,
+        data: hotels.map(hotel => {
+          return {
+            ...hotel.toJSON(),
+            availableRooms: hotel.rooms.filter(room => !room.reserved).length
+          }
+        }),
         count: count
       }
     })
@@ -36,7 +97,6 @@ const createHotel = async (req, res = response) => {
   const uid = req.uid;
 
   try {
-    
     const existHotel = await Hotel.findOne({ email: others.email });
 
     if (existHotel) {
@@ -49,17 +109,23 @@ const createHotel = async (req, res = response) => {
     const hotel = new Hotel({...others, updatedBy: uid});
 
     const roomsPromises = rooms.map(roomData => {
-      const newRoom = new Room({...roomData, hotel: hotel.id, updatedBy: uid})
+      const newRoom = new Room({
+        updatedBy: uid, 
+        code: `${roomData.location.floor}-${roomData.location.room}`,
+        ...roomData, 
+        hotel: hotel.id, 
+      });
       return newRoom.save();
     })
     
     const savedRooms = await Promise.all(roomsPromises)
+
     hotel.rooms = savedRooms.map(room => room.id)
-    const updatedHotel = await hotel.save();
+    await hotel.save();
     
     return res.status(200).json({
       ok: true,
-      data: updatedHotel
+      data: 'Hotel created successfully'
     })
   } catch (error) {
     res.status(500).json({
@@ -85,10 +151,7 @@ const updateHotel = async (req, res = response) => {
     }
 
     if (body.email === hotel.email) {
-      return res.status(400).json({
-        ok: false,
-        data: 'Email already exists'
-      })
+      delete body.email;
     }
 
     if (body.email !== hotel.email) {
@@ -101,11 +164,11 @@ const updateHotel = async (req, res = response) => {
         })
       }
     }
-    const updatedHotel = await Hotel.findByIdAndUpdate(id, body, { new: true });
+    await Hotel.findByIdAndUpdate(id, body, { new: true });
     
     return res.status(200).json({
       ok: true,
-      data: updatedHotel
+      data: 'Hotel updated successfully'
     })
   } catch (error) {
     return res.status(500).json({
@@ -151,7 +214,9 @@ const deleteHotel = async (req, res = response) => {
 
 module.exports = {
   getHotels,
+  getHotelsPrivate,
   createHotel,
   updateHotel,
-  deleteHotel
+  deleteHotel,
+  getHotel
 }

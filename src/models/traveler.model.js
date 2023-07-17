@@ -1,10 +1,5 @@
 const { Schema, model } = require('mongoose')
 
-const EmergencyContactTypeSchema =  new Schema({
-  name: String,
-  phone: String,
-})
-
 const TravelerSchema = Schema({
   name: {
     type: String,
@@ -33,10 +28,6 @@ const TravelerSchema = Schema({
   phone: {
     type: String,
     required: true,
-  },
-  emergencyContact: {
-    type: EmergencyContactTypeSchema,
-    required: true
   },
   reservation: {
     type: Schema.Types.ObjectId,

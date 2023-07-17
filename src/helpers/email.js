@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const nodemailer = require('nodemailer');
 
 // Create a Nodemailer transporter
@@ -7,19 +6,26 @@ const transporter = nodemailer.createTransport({
   port: 587,
   host: "smtp.office365.com",
   auth: {
-    user: 'jdoo1115@outlook.es', // Your email address
-    pass: 'lol24pcAngular ', // Your email password or app-specific password for Gmail
+    user: 'jdoo1115@outlook.es', 
+    pass: process.env.EMAIL_PASS,
   },
   secure: false
 });
 
-// TODO: CHANGE TEMPLATE EMAIL
-const sendEmail = () => {
+
+const sendEmail = (email, reservationId) => {
   const mailOptions = {
     from: 'jdoo1115@outlook.es',
-    to: 'jdoo1115@gmail.com',
-    subject: 'Hello from Express',
-    text: 'This is a test email sent from Express using Nodemailer.',
+    to: [...email, 'jdoo1115@gmail.com'],
+    subject: `Confirmación de reserva ${reservationId}`,
+    html: `
+      <div>
+        <h1>Confirmación de reserva ${reservationId}</h1>
+
+        <p>Para ver más detalles de tu reserva, por favor, visita la página de la aplicación</p>
+        <p>o da clic en el siguiente enlace: <a href="${process.env.CLIENT_URL}/reservation/detail/${reservationId}">Ver reserva</a></p>
+      </div>
+    `
   };
 
   // Send email

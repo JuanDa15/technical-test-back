@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose')
 
 const locationTypeSchema =  new Schema({
-  floor: Number,
-  room: Number,
+  floor: String,
+  room: String,
 })
 
 const RoomSchema = Schema({
@@ -20,15 +20,20 @@ const RoomSchema = Schema({
     required: true
   },
   baseCost: {
-    type: Number,
+    type: String,
     required: true
   },
   taxes: {
-    type: Number,
+    type: String,
     required: true
   },
   type: {
     type: String,
+    required: true
+  },
+  hotel: {
+    type: Schema.Types.ObjectId,
+    ref: 'Hotel',
     required: true
   },
   active: {
@@ -38,11 +43,6 @@ const RoomSchema = Schema({
   reserved: {
     type: Boolean,
     default: false
-  },
-  hotel: {
-    type: Schema.Types.ObjectId,
-    ref: 'Hotel',
-    required: true
   },
   reservation: {
     type: Schema.Types.ObjectId,

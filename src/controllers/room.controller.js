@@ -2,6 +2,29 @@ const { response } = require('express');
 const Room = require('../models/room.model');
 const Hotel = require('../models/hotel.model');
 
+const getRoom = async (req, res = response) => {
+  const { id } = req.params;
+  try {
+    const room = await Room.findById(id).populate('hotel','name email').populate('updatedBy','name lastName email');
+    if (!room) {
+      return res.status(404).json({
+        ok: false,
+        data: 'Room not found'
+      })
+    }
+    return res.status(200).json({
+      ok: true,
+      data: room
+    })
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      data: 'Unexpected error. Contact the administrator'
+    })
+  }
+}
+
+// TODO: AGREGAR TIMESTAMP UPDATED BY
 const getRooms = async (req, res = response) => {
   const { from = 0 } = req.query;
   try {
@@ -39,8 +62,9 @@ const createRoom = async (req, res = response) => {
         data: 'Hotel does not exist'
       })
     }
+    const roomCode =  `${others.location.floor}-${others.location.room}`;
 
-    const room = await Room.findOne({code: others.code});
+    const room = await Room.findOne({code: roomCode});
     
     if (room && room.hotel.toString() === hotel) {
       return res.status(400).json({
@@ -48,17 +72,16 @@ const createRoom = async (req, res = response) => {
         data: 'Room already exists'
       })
     }
-
-
-    const newRoom = new Room({...others, updatedBy: uid, hotel})
+    
+    
+    const newRoom = new Room({...others, updatedBy: uid, hotel, code: roomCode})
     const roomSaved = await newRoom.save();
-    console.log(roomSaved)
 
-    const updatedHotel = await Hotel.findByIdAndUpdate(hotel, { $push: { rooms: roomSaved.id } }, { new: true});
+    await Hotel.findByIdAndUpdate(hotel, { $push: { rooms: roomSaved.id } }, { new: true});
 
     return res.status(201).json({
       ok: true,
-      data: updatedHotel
+      data: 'Room created and added to hotel successfully'
     })
 
   } catch (error) {
@@ -84,7 +107,7 @@ const updateRoom = async (req, res = response) => {
       })
     }
 
-    const roomUpdated = await Room.findByIdAndUpdate(id, {...body, updatedBy: uid}, { new: true });
+    const roomUpdated = await Room.findByIdAndUpdate(id, {...body, updatedBy: uid}, { new: true }).populate('hotel','name email').populate('updatedBy','name lastName email');;
 
 
     return res.status(200).json({
@@ -140,4 +163,5 @@ module.exports = {
   createRoom,
   updateRoom,
   deleteRoom,
+  getRoom
 }

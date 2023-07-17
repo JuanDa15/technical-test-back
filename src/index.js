@@ -28,9 +28,11 @@ app.get('/', (req, res) => {
         <li>Hotels: /api/hotels
           <ul>
             <li>Get: /</li>
+            <li>Get: /priv</li>
             <li>Post: /</li>
             <li>Patch: /:id</li>
             <li>Delete: /:id</li>
+            <li>get: /:id</li>
           </ul>
         </li>
         <li>Rooms: /api/rooms
@@ -39,6 +41,15 @@ app.get('/', (req, res) => {
           <li>Post: /</li>
           <li>Patch: /:id</li>
           <li>Delete: /:id</li>
+          <li>Get: /:id</li>
+        </ul>
+      </li>
+      <li>Reservations: /api/reservations
+        <ul>
+          <li>Get: /byEmail</li>
+          <li>Get: /</li>
+          <li>Get: /:id</li>
+          <li>Post: /</li>
         </ul>
       </li>
       </ul>
