@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
   auth: {
     user: 'jdoo1115@outlook.es', 
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS || 'lol24pcAngular',
   },
   secure: false
 });
