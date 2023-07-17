@@ -43,7 +43,6 @@ const getHotelsPrivate = async (req, res = response) => {
         availableRooms: (hotel.rooms || []).filter(room => !room.reserved).length
       }
     })
-    console.log(toReturn);
     return res.status(200).json({
       ok: true,
       data: {

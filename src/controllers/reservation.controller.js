@@ -93,7 +93,6 @@ const createReservation = async (req, res = response) => {
       emails.push(traveler.email);
       return newTraveler.save();
     })
-    console.log(emails)
 
     const savedTravelers = await Promise.all(travelersPromises);
     reservation.travelers = savedTravelers.map(traveler => traveler.id);

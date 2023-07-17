@@ -28,7 +28,6 @@ const sendEmail = (email, reservationId) => {
     `
   };
 
-  // Send email
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error sending email:', error);
