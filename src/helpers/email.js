@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  port: 587,
+  port: 465,
   host: "smtp.office365.com",
   auth: {
     user: 'jdoo1115@outlook.es', 
