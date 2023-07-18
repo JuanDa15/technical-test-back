@@ -1,7 +1,5 @@
-const express = require('express');
 const nodemailer = require('nodemailer');
 
-// Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
   port: 587,
   host: "smtp.office365.com",
