@@ -97,16 +97,15 @@ const createHotel = async (req, res = response) => {
 
   try {
     const existHotel = await Hotel.findOne({ email: others.email });
-
     if (existHotel) {
       return res.status(400).json({
         ok: false,
         data: 'Hotel already exists'
       })
     }
-
+    
     const hotel = new Hotel({...others, updatedBy: uid});
-
+    
     const roomsPromises = rooms.map(roomData => {
       const newRoom = new Room({
         updatedBy: uid, 
